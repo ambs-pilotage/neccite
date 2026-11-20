@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>NECCITE – Tableau de pilotage</title>
+<style>
+  :root{
+    --bg:#f6f4ee; --card:#ffffff; --ink:#1f2a1c; --muted:#6b7064; --line:#e2dfd4;
+    --accent:#6f9530; --accent-2:#3e5a1c; --soft:#eef3e3; --brun:#8b4a26; --orangec:#e08a3c;
+    --rouge:#b3261e; --orange:#c47a00; --vert:#3d7a2a; --gris:#8a8a8a; --bleu:#2b5d8a;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font:14px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;color:var(--ink);background:var(--bg)}
+  header{background:#fff;color:var(--ink);border-bottom:4px solid var(--orangec)}
+  header .top{display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;padding:14px 28px}
+  header .id{display:flex;align-items:center;gap:18px}
+  header .id img{height:84px}
+  header h1{margin:0;font-size:26px;letter-spacing:.5px;color:var(--brun)}
+  header h1 span{color:var(--accent)}
+  header .sub{color:var(--muted);font-size:13px;max-width:700px}
+  header .maj{font-size:12px;color:var(--muted);margin-top:4px}
+  header .fin img{height:96px;display:block}
+  .navbar{background:var(--accent-2);padding:0 28px}
+  nav{display:flex;gap:2px;padding-top:8px;flex-wrap:wrap}
+  nav button{background:transparent;border:0;color:#dfe8cf;padding:10px 14px;font:inherit;cursor:pointer;border-radius:8px 8px 0 0}
+  nav button:hover{background:rgba(255,255,255,.08)}
+  nav .pdfbtn{margin-left:auto;background:var(--orangec);color:#fff;font-weight:600;border-radius:8px;margin-bottom:6px}
+  nav .pdfbtn:hover{background:#c97526}
+  nav button.on{background:var(--bg);color:var(--ink);font-weight:600}
+  main{padding:24px 28px 60px;max-width:1400px;margin:0 auto}
+  section{display:none} section.on{display:block}
+  h2{font-size:18px;margin:0 0 14px}
+  h3{font-size:15px;margin:0 0 8px}
+  .grid{display:grid;gap:16px}
+  .g4{grid-template-columns:repeat(4,1fr)} .g3{grid-template-columns:repeat(3,1fr)} .g2{grid-template-columns:1fr 1fr}
+  @media(max-width:1000px){.g4,.g3,.g2{grid-template-columns:1fr 1fr}}
+  @media(max-width:640px){.g4,.g3,.g2{grid-template-columns:1fr}}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px}
+  .kpi .v{font-size:26px;font-weight:700;color:var(--accent-2)} .kpi .l{color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.5px}
+  .alert{border-left:5px solid var(--orange);margin-bottom:12px}
+  .alert.rouge{border-left-color:var(--rouge)}
+  .alert .src{font-size:12px;color:var(--muted);margin-top:6px}
+  .muted{color:var(--muted)} .small{font-size:12px}
+  ul{margin:6px 0;padding-left:18px} li{margin:2px 0}
+  a{color:var(--bleu)} a.file::before{content:"📄 ";}
+  .pill{display:inline-block;padding:1px 8px;border-radius:999px;font-size:11px;font-weight:600;background:#eee;color:#333;white-space:nowrap}
+  .st-ok{background:#e1f0d8;color:var(--vert)} .st-vigilance{background:#fdecc8;color:#8a5600}
+  .st-bloque{background:#f8d7d4;color:var(--rouge)} .st-a-venir{background:#e5edf5;color:var(--bleu)} .st-termine{background:#e6e6e6;color:#444}
+  .st-a-faire{background:#fdecc8;color:#8a5600} .st-en-cours{background:#e5edf5;color:var(--bleu)} .st-fait{background:#e1f0d8;color:var(--vert)}
+  .bar{height:8px;background:#ecebe4;border-radius:5px;overflow:hidden} .bar>i{display:block;height:100%;background:var(--accent)}
+  table{width:100%;border-collapse:collapse} th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{font-size:12px;text-transform:uppercase;letter-spacing:.4px;color:var(--muted);font-weight:600}
+  /* Jalons */
+  .timeline{display:flex;gap:0;overflow-x:auto;padding:6px 0}
+  .jal{flex:1;min-width:120px;position:relative;padding-top:22px;text-align:center;font-size:12px}
+  .jal::before{content:"";position:absolute;top:8px;left:0;right:0;height:3px;background:var(--line)}
+  .jal .dot{position:absolute;top:2px;left:50%;transform:translateX(-50%);width:15px;height:15px;border-radius:50%;background:#fff;border:3px solid var(--accent)}
+  .jal.fait .dot{background:var(--accent)} .jal.next .dot{border-color:var(--orange);background:var(--orange)}
+  .jal b{display:block}
+  /* Planning */
+  .pl-ctrl{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:12px}
+  .pl{background:#fff;border:1px solid var(--line);border-radius:12px;overflow-x:auto;position:relative}
+  .pl-in{position:relative}
+  .pl-row{display:flex;align-items:stretch;border-bottom:1px solid #f1efe8;min-height:34px}
+  .pl-lab{position:sticky;left:0;z-index:4;background:#fff;width:330px;min-width:330px;padding:6px 12px;font-size:13px;line-height:1.3;border-right:1px solid var(--line);display:flex;align-items:center;gap:8px}
+  .pl-lab b{font-variant-numeric:tabular-nums;min-width:34px;color:var(--muted);font-weight:600}
+  .pl-row.lot .pl-lab{color:#fff;font-weight:700;cursor:pointer}
+  .pl-row.lot .pl-lab .tg{margin-left:auto;font-size:11px;opacity:.85}
+  .pl-trk{position:relative;flex:none}
+  .pl-hd .pl-lab{background:#faf9f5;font-size:12px;color:var(--muted)}
+  .pl-hd{position:sticky;top:0;z-index:6;background:#faf9f5}
+  .pl-y{position:absolute;top:2px;font-size:12px;font-weight:700;color:var(--ink);padding-left:5px}
+  .pl-m{position:absolute;bottom:3px;font-size:10px;color:var(--muted);text-align:center}
+  .pl-m.cur{color:var(--rouge);font-weight:700}
+  .pl-grid{position:absolute;top:0;bottom:0;width:1px;background:#f1efe8;z-index:0}
+  .pl-grid.y{background:#d8d4c6}
+  .pl-bar{position:absolute;top:9px;height:16px;border-radius:8px;z-index:1;overflow:hidden;box-shadow:inset 0 0 0 1px rgba(0,0,0,.08)}
+  .pl-bar i{position:absolute;left:0;top:0;bottom:0}
+  .pl-sum{position:absolute;top:14px;height:6px;border-radius:3px;z-index:1;opacity:.9}
+  .pl-dia{position:absolute;top:10px;width:14px;height:14px;margin-left:-7px;transform:rotate(45deg);background:#fff;border:2.5px solid #222;z-index:3;border-radius:2px}
+  .pl-dia.past{background:#222}
+  .pl-rep{position:absolute;top:6px;margin-left:-11px;width:22px;height:22px;border-radius:50%;background:#fff;border:2px solid #222;z-index:3;font-size:10px;font-weight:800;display:flex;align-items:center;justify-content:center}
+  .pl-ov{position:absolute;top:0;bottom:0;z-index:7;pointer-events:none}
+  .pl-ec{border-left:2px dashed var(--orangec)}
+  .pl-ec span{position:absolute;top:22px;left:3px;background:var(--orangec);color:#fff;font-size:10px;font-weight:700;padding:0 5px;border-radius:3px;white-space:nowrap}
+  .pl-today{border-left:2px solid var(--rouge)}
+  .pl-today span{position:absolute;bottom:2px;left:3px;background:var(--rouge);color:#fff;font-size:10px;font-weight:700;padding:0 5px;border-radius:3px;white-space:nowrap}
+  .pl-tip{position:fixed;z-index:60;background:#222;color:#fff;font-size:12px;padding:6px 9px;border-radius:6px;pointer-events:none;display:none;max-width:280px}
+  .upc td{padding:6px 10px}
+  .legend{display:flex;gap:16px;font-size:12px;color:var(--muted);margin:10px 0;flex-wrap:wrap}
+  /* CR */
+  .filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+  .filters input{flex:1;min-width:220px;padding:8px 12px;border:1px solid var(--line);border-radius:8px;font:inherit}
+  .chip{border:1px solid var(--line);background:#fff;border-radius:999px;padding:5px 12px;cursor:pointer;font:inherit;font-size:12px}
+  .chip.on{background:var(--accent);border-color:var(--accent);color:#fff}
+  .cr{display:grid;grid-template-columns:110px 1fr;gap:14px;padding:14px 0;border-bottom:1px solid var(--line)}
+  .cr .d{font-weight:700;color:var(--accent-2)} .cr .t{font-weight:600}
+  .cr details summary{cursor:pointer;color:var(--bleu);font-size:12px;margin-top:4px}
+  .lot-h{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+  .lot-h .sw{width:12px;height:36px;border-radius:3px}
+  .pts{border-top:1px dashed var(--line);margin-top:10px;padding-top:8px}
+  .pts div{margin:6px 0} .pts b{color:var(--accent-2);font-size:12px;margin-right:6px}
+  .photos{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}
+  .photos figure{margin:0;background:#fff;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+  .photos img{width:100%;height:170px;object-fit:cover;display:block;cursor:zoom-in}
+  .photos figcaption{padding:8px 10px;font-size:12px}
+  #lb{position:fixed;inset:0;background:rgba(0,0,0,.85);display:none;align-items:center;justify-content:center;z-index:50;cursor:zoom-out}
+  #lb img{max-width:92vw;max-height:88vh;border-radius:6px}
+  .help{background:var(--soft);border:1px solid #d8e3c3}
+  code{background:#f1efe8;padding:1px 5px;border-radius:4px;font-size:12px}
+  .num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+  tr.tot td{font-weight:700;border-top:2px solid var(--ink)}
+  .st-remis{background:#e1f0d8;color:var(--vert)} .st-retard{background:#f8d7d4;color:var(--rouge)}
+  .gauge{height:14px;background:#ecebe4;border-radius:7px;overflow:hidden;display:flex}
+  .gauge i{display:block;height:100%}
+  .lg{display:inline-block;width:10px;height:10px;border-radius:2px;margin:0 4px 0 10px;vertical-align:middle}
+  #exp{position:fixed;inset:0;background:rgba(0,0,0,.45);display:none;align-items:center;justify-content:center;z-index:80}
+  #exp .box{background:#fff;border-radius:12px;padding:22px 26px;min-width:360px;box-shadow:0 10px 40px rgba(0,0,0,.25)}
+  #exp label{display:block;margin:6px 0}
+  .print-only{display:none}
+  @page{size:A4 landscape;margin:10mm 10mm 16mm 10mm}
+  @media print{
+    body{background:#fff;font-size:11px}
+    .navbar,.pl-ctrl,.filters,#exp,.legend .small,details summary{display:none!important}
+    main{padding:0;max-width:none}
+    section{display:none!important}
+    section.imp{display:block!important;break-before:page}
+    section.imp:first-of-type{break-before:auto}
+    .print-only{display:block}
+    .card{break-inside:avoid;border-color:#ccc}
+    .cr{break-inside:avoid}
+    .pl{overflow:visible;border:0}
+    .pl-lab{position:static}
+    header{border-bottom:3px solid var(--orangec)}
+    a{color:inherit;text-decoration:none}
+    .photos img{height:120px}
+    .g4{grid-template-columns:repeat(4,1fr)!important} .g3{grid-template-columns:repeat(3,1fr)!important} .g2{grid-template-columns:1fr 1fr!important}
+    header .top{flex-wrap:nowrap;padding:6px 0} header .id img{height:60px} header .fin img{height:70px}
+    .kpi .v{font-size:20px}
+    .foot{display:flex!important;justify-content:space-between;font-size:9px;color:#666;border-top:1px solid #ccc;margin-top:12px;padding-top:4px}
+    h2{break-after:avoid} .pl-row{break-inside:avoid}
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="top">
+    <div class="id">
+      <img src="logos/logo-construire-en-chanvre.png" alt="Construire en Chanvre">
+      <div>
+        <h1 id="h-acr"></h1>
+        <div class="sub" id="h-titre"></div>
+        <div class="maj" id="h-maj"></div>
+      </div>
+    </div>
+    <div class="fin"><img src="logos/finance-par-france2030-ademe.png" alt="Financé par la République française – France 2030 – ADEME"></div>
+  </div>
+  <div class="navbar"><nav id="nav"></nav></div>
+</header>
+
+<main>
+  <section id="s-bord"></section>
+  <section id="s-planning"></section>
+  <section id="s-lots"></section>
+  <section id="s-cr"></section>
+  <section id="s-actions"></section>
+  <section id="s-equipe"></section>
+  <section id="s-notes"></section>
+  <section id="s-docs"></section>
+  <section id="s-budget"></section>
+  <section id="s-livrables"></section>
+<div class="foot print-only"><span>NÉ-C-C'-ITE – Construire en Chanvre – convention ADEME 2382D0112-A – projet financé par France 2030 / ADEME</span><span id="foot-date"></span></div>
+</main>
+<div id="lb" onclick="this.style.display='none'"><img alt=""></div>
+<div id="exp"><div class="box"><h3>Exporter en PDF</h3><div class="small muted" style="margin-bottom:8px">Choisir les rubriques à inclure, puis « Enregistrer au format PDF » dans la fenêtre d'impression.</div><div id="exp-list"></div>
+<div style="margin-top:14px;display:flex;gap:8px;justify-content:flex-end"><button class="chip" id="exp-annul">Annuler</button><button class="chip on" id="exp-ok">Générer le PDF</button></div></div></div>
+
+
+<script src="donnees.js"></script>
+<script src="liens.js"></script>
+<script>
+(function(){
+  const D = window.NECCITE;
+  if(!D){document.body.innerHTML='<p style="padding:40px">Fichier donnees.js introuvable.</p>';return;}
+  const $ = s => document.querySelector(s);
+  const esc = s => String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  const MOIS=['janv.','févr.','mars','avr.','mai','juin','juil.','août','sept.','oct.','nov.','déc.'];
+  const fdate = s => { if(!s||!/^\d{4}-\d{2}/.test(s)) return esc(s||''); const [y,m,d]=s.split('-'); return (d?(+d)+' ':'')+MOIS[+m-1]+' '+y; };
+  const LIENS = window.NECCITE_LIENS || null, EN_LIGNE = !!LIENS;
+  const href = p => EN_LIGNE ? (LIENS[p]||'') : '../' + p.split('/').map(encodeURIComponent).join('/');
+  const flink = (p,label) => { if(!p) return ''; const h=href(p); return h ? `<a class="file" href="${h}" target="_blank" rel="noopener">${esc(label||p.split('/').pop())}</a>` : `<span class="muted">${esc(label||p.split('/').pop())}</span>`; };
+  const STATUTS={ok:'Dans les temps',vigilance:'Vigilance',bloque:'Bloqué / à arbitrer','a-venir':'À venir',termine:'Terminé','a-faire':'À faire','en-cours':'En cours',fait:'Fait'};
+  const pill = s => `<span class="pill st-${s}">${STATUTS[s]||s}</span>`;
+  const today = new Date();
+  const ym = s => { const [y,m]=s.split('-').map(Number); return y*12+(m-1); };
+
+  /* Header */
+  $('#h-acr').innerHTML = esc(D.projet.acronyme) + ' <span>· Tableau de pilotage</span>';
+  $('#h-titre').textContent = D.projet.titre + ' — ' + D.projet.programme + ' · convention ' + D.projet.convention;
+  $('#h-maj').innerHTML = 'Mis à jour le <b>'+fdate(D.miseAJour)+'</b> · '+esc(D.projet.pilote);
+
+  /* Navigation */
+  const tabs=[['bord','Tableau de bord'],['planning','Planning'],['lots','Lots'],['livrables','Livrables ADEME'],['budget','Budget'],['cr','Comptes rendus'],['actions','Actions'],['equipe','Équipe'],['notes','Notes & photos'],['docs','Documents']];
+  $('#nav').innerHTML = tabs.map(([k,l])=>`<button data-k="${k}">${l}</button>`).join('') + ((EN_LIGNE && window.self!==window.top) ? '' : `<button id="btn-pdf" class="pdfbtn">⤓ Exporter en PDF</button>`);
+  function show(k){ if(k==='planning'&&window._rp) setTimeout(window._rp,0); document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('on',b.dataset.k===k));
+    document.querySelectorAll('main section').forEach(s=>s.classList.toggle('on',s.id==='s-'+k)); location.hash=k; }
+  $('#nav').onclick = e => { if(e.target.dataset.k) show(e.target.dataset.k); else if(e.target.id==='btn-pdf') ouvrirExport(); };
+
+  /* ---------- Tableau de bord ---------- */
+  const t0=new Date(D.projet.t0);
+  const moisEcoules = (today.getFullYear()-t0.getFullYear())*12 + today.getMonth()-t0.getMonth() + 1;
+  const next = D.jalons.filter(j=>new Date(j.date)>=new Date(today.toDateString()))[0];
+  const jRest = next ? Math.ceil((new Date(next.date)-today)/864e5) : null;
+  const actOuv = D.actions.filter(a=>a.statut!=='fait').length;
+  const lastCR = D.comptesRendus.filter(c=>c.type!=='CA CenC').sort((a,b)=>b.date.localeCompare(a.date))[0];
+
+  $('#s-bord').innerHTML = `
+    <div class="grid g4" style="margin-bottom:16px">
+      <div class="card kpi"><div class="l">Avancement calendaire</div><div class="v">M${moisEcoules}</div><div class="muted small">T0 ${fdate(D.projet.t0)} · démarrage effectif ${fdate(D.projet.demarrageEffectif)}</div></div>
+      <div class="card kpi"><div class="l">Prochaine étape</div><div class="v">${next?(jRest>=0?'J-'+jRest:'—'):'—'}</div><div class="muted small">${next?esc(next.titre)+' · '+fdate(next.date):''}</div></div>
+      <div class="card kpi"><div class="l">Actions ouvertes</div><div class="v">${actOuv}</div><div class="muted small">voir l'onglet Actions</div></div>
+      <div class="card kpi"><div class="l">État du projet</div><div class="v" style="font-size:18px;padding-top:6px">${esc(D.projet.etat)}</div><div class="muted small">dernier CR : ${lastCR?fdate(lastCR.date):''}</div></div>
+    </div>
+    <div class="grid g2">
+      <div>
+        <h2>Points d'attention</h2>
+        ${D.alertes.map(a=>`<div class="card alert ${a.niveau}"><h3>${esc(a.titre)}</h3><div>${esc(a.texte)}</div><div class="src">Source : ${esc(a.source)}</div></div>`).join('')}
+      </div>
+      <div>
+        <h2>État des lots</h2>
+        <div class="card"><table>${D.lots.map(l=>{const av=Math.round(l.taches.reduce((s,t)=>s+t.avancement,0)/l.taches.length);
+          return `<tr><td style="width:14px"><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:${l.couleur}"></span></td>
+          <td><a href="#" data-lot="${l.id}">Lot ${l.id} – ${esc(l.titre)}</a><div class="bar" style="margin-top:4px"><i style="width:${av}%"></i></div></td>
+          <td style="width:40px" class="small muted">${av}%</td><td style="width:130px">${pill(l.statut)}</td></tr>`}).join('')}</table>
+          <div class="small muted" style="margin-top:6px">% = moyenne des tâches (estimations à valider)</div></div>
+        <h2 style="margin-top:18px">Dernières réunions</h2>
+        <div class="card">${D.comptesRendus.filter(c=>c.type!=='CA CenC').sort((a,b)=>b.date.localeCompare(a.date)).slice(0,5).map(c=>`<div style="margin:6px 0"><b>${fdate(c.date)}</b> · <span class="pill">${esc(c.type)}</span> ${esc(c.titre)}</div>`).join('')}</div>
+      </div>
+    </div>
+    <h2 style="margin-top:22px">Étapes-clés</h2>
+    <div class="card"><div class="timeline">${D.jalons.map(j=>`<div class="jal ${j.statut==='fait'?'fait':''} ${next&&j===next?'next':''}"><span class="dot"></span><b>${fdate(j.date)}</b>${esc(j.titre)}</div>`).join('')}</div></div>
+    <div class="grid g2" style="margin-top:16px">
+      <div class="card"><h3>Objectifs</h3><ul>${D.projet.objectifs.map(o=>`<li>${esc(o)}</li>`).join('')}</ul></div>
+      <div class="card"><h3>3 familles de systèmes génériques</h3><ul>${D.projet.systemes.map(o=>`<li>${esc(o)}</li>`).join('')}</ul></div>
+    </div>`;
+  document.querySelectorAll('[data-lot]').forEach(a=>a.onclick=e=>{e.preventDefault();show('lots');const el=document.getElementById('lot-'+a.dataset.lot);if(el)el.scrollIntoView({behavior:'smooth'});});
+
+  /* ---------- Planning ---------- */
+  const P=D.planning, m0=ym(P.debut), m1=ym(P.fin), nM=m1-m0+1;
+  const lotCol={}; D.lots.forEach(l=>lotCol[l.id]=l.couleur);
+  const mix = (hex,t) => { const n=parseInt(hex.slice(1),16); let r=n>>16,g=n>>8&255,b=n&255; return `rgb(${Math.round(r+(255-r)*t)},${Math.round(g+(255-g)*t)},${Math.round(b+(255-b)*t)})`; };
+  const SM=['janv','févr','mars','avr','mai','juin','juil','août','sept','oct','nov','déc'];
+  const ecs = D.jalons.filter(j=>/^EC\d/.test(j.titre)).map(j=>({i:ym(j.date.slice(0,7))-m0, f:(+j.date.slice(8,10)-1)/30, t:j.titre.split(' ')[0]}));
+  const tIdx = today.getFullYear()*12+today.getMonth()-m0, tFrac=(today.getDate()-1)/31, tPos=tIdx+tFrac;
+  const plState={zoom:'fit', fermes:new Set(), avenir:false};
+  const libMois = i => { const a=m0+i; return SM[a%12]+' '+Math.floor(a/12); };
+  function renderPlanning(){
+    const LW=330, avail=plState.printW? plState.printW-LW : Math.max(600,(document.querySelector('main').clientWidth||1300)-60-LW);
+    const cw = plState.zoom==='mois'?40:Math.max(14,Math.floor(avail/nM)), W=nM*cw;
+    let hd=`<div class="pl-row pl-hd" style="height:44px"><div class="pl-lab">Lot / tâche</div><div class="pl-trk" style="width:${W}px">`;
+    for(let i=0;i<nM;i++){ const a=m0+i, m=a%12;
+      if(m===0||i===0) hd+=`<div class="pl-y" style="left:${i*cw}px">${Math.floor(a/12)}</div>`;
+      if(cw>=24) hd+=`<div class="pl-m ${i===tIdx?'cur':''}" style="left:${i*cw}px;width:${cw}px">${SM[m].slice(0,4)}</div>`;
+      else if(m%3===0) hd+=`<div class="pl-m" style="left:${i*cw}px;width:${3*cw}px">T${m/3+1}</div>`;
+    }
+    hd+='</div></div>';
+    const grid = () => { let g=''; for(let i=0;i<nM;i++){const m=(m0+i)%12; if(cw>=24||m%3===0) g+=`<div class="pl-grid ${m===0?'y':''}" style="left:${i*cw}px"></div>`;} return g; };
+    const G=grid();
+    let body='', lots=[...new Set(P.lignes.map(r=>r.lot))];
+    lots.forEach(lid=>{
+      const L=D.lots.find(l=>l.id===lid)||{titre:''}, col=lotCol[lid]||'#888';
+      let rows=P.lignes.filter(r=>r.lot===lid);
+      if(plState.avenir) rows=rows.filter(r=>ym(r.fin)-m0>=tIdx);
+      const s0=Math.min(...P.lignes.filter(r=>r.lot===lid).map(r=>ym(r.debut)))-m0, e0=Math.max(...P.lignes.filter(r=>r.lot===lid).map(r=>ym(r.fin)))-m0;
+      const ferme=plState.fermes.has(lid);
+      body+=`<div class="pl-row lot" data-lot="${lid}"><div class="pl-lab" style="background:${col}">Lot ${lid} – ${esc(L.titre)}<span class="tg">${ferme?'▸ '+rows.length+' tâches':'▾'}</span></div><div class="pl-trk" style="width:${W}px;background:${mix(col,.93)}">${G}<div class="pl-sum" style="left:${s0*cw}px;width:${(e0-s0+1)*cw}px;background:${col}"></div></div></div>`;
+      if(ferme) return;
+      rows.forEach(r=>{
+        const s=ym(r.debut)-m0, e=ym(r.fin)-m0, left=s*cw, w=(e-s+1)*cw, done=Math.max(0,Math.min(w,(tPos-s)*cw));
+        let t=`<div class="pl-row"><div class="pl-lab" title="${esc(r.titre)}"><b>${r.id}</b>${esc(r.titre)}</div><div class="pl-trk" style="width:${W}px">${G}`;
+        t+=`<div class="pl-bar" style="left:${left}px;width:${w}px;background:${mix(col,.72)}" data-tip="${esc(r.id+' – '+r.titre)}<br>${libMois(s)} → ${libMois(e)}"><i style="width:${done}px;background:${mix(col,.35)}"></i></div>`;
+        (r.livrables||[]).forEach(x=>{const i=ym(x)-m0; t+=`<div class="pl-dia ${i<tIdx?'past':''}" style="left:${(i+.5)*cw}px" data-tip="Livrable ${esc(r.id)} – ${libMois(i)}"></div>`;});
+        (r.reperes||[]).forEach(x=>{const i=ym(x.mois)-m0; t+=`<div class="pl-rep" style="left:${(i+.5)*cw}px;border-color:${col};color:${col}" data-tip="${esc(r.id)} – ${esc(x.texte)} ${libMois(i)}">${/essai/i.test(x.texte)?'E':'M'}</div>`;});
+        body+=t+'</div></div>';
+      });
+    });
+    let ov=ecs.map(e=>`<div class="pl-ov pl-ec" style="left:${LW+(e.i+e.f)*cw}px"><span>${e.t}</span></div>`).join('');
+    if(tIdx>=0&&tIdx<nM) ov+=`<div class="pl-ov pl-today" style="left:${LW+tPos*cw}px"><span>Aujourd'hui</span></div>`;
+    $('#pl').innerHTML=`<div class="pl-in" style="width:${LW+W}px">${hd}${body}${ov}</div>`;
+    $('#pl').querySelectorAll('.pl-row.lot').forEach(r=>r.onclick=()=>{const k=r.dataset.lot; plState.fermes.has(k)?plState.fermes.delete(k):plState.fermes.add(k); renderPlanning();});
+    // centrer sur aujourd'hui
+    if(plState.zoom==='mois') requestAnimationFrame(()=>{$('#pl').scrollLeft=Math.max(0,tPos*cw-500);});
+  }
+  // prochaines échéances (6 mois)
+  const upc=[];
+  P.lignes.forEach(r=>{(r.livrables||[]).forEach(x=>upc.push({m:ym(x),t:'Livrable',l:r.id+' – '+r.titre,lot:r.lot}));(r.reperes||[]).forEach(x=>upc.push({m:ym(x.mois),t:x.texte.charAt(0).toUpperCase()+x.texte.slice(1),l:r.id+' – '+r.titre,lot:r.lot}));});
+  D.jalons.forEach(j=>upc.push({m:ym(j.date.slice(0,7)),t:'Jalon',l:j.titre,lot:'0'}));
+  const nowM=today.getFullYear()*12+today.getMonth();
+  const prochains=upc.filter(u=>u.m>=nowM&&u.m<nowM+7).sort((a,b)=>a.m-b.m);
+  $('#s-planning').innerHTML = `<h2>Planning prévisionnel</h2>
+    <div class="pl-ctrl">
+      <button class="chip on" data-z="fit">Vue complète</button><button class="chip" data-z="mois">Zoom mois</button>
+      <button class="chip" id="pl-av">Masquer les tâches terminées</button>
+      <button class="chip" id="pl-all">Tout replier / déplier</button>
+      <span class="small muted" style="margin-left:auto">Source : <a href="https://docs.google.com/spreadsheets/d/1S91Xb-peCKc0xmQ0lyIE63HFW3S9ZNtO1drs82SrMi8/edit?gid=315075359" target="_blank">Google Sheet planning</a></span>
+    </div>
+    <div class="legend"><span><span style="display:inline-block;width:26px;height:10px;border-radius:5px;background:#9fb27a"></span> barre = durée de la tâche (partie foncée = temps écoulé)</span><span>◆ livrable (plein = passé)</span><span>Ⓜ maquette · Ⓔ essai</span><span style="color:var(--orangec)">┆ étape-clé</span><span style="color:var(--rouge)">│ aujourd'hui</span><span>Cliquer sur un lot pour le replier</span></div>
+    <div class="pl" id="pl"></div>
+    <h2 style="margin-top:22px">Échéances des 6 prochains mois</h2>
+    <div class="card"><table class="upc"><thead><tr><th>Mois</th><th>Type</th><th>Objet</th></tr></thead><tbody>${prochains.map(u=>`<tr><td style="white-space:nowrap"><b>${SM[u.m%12]} ${Math.floor(u.m/12)}</b></td><td><span class="pill" style="background:${mix(lotCol[u.lot]||'#888',.8)}">${esc(u.t)}</span></td><td>${esc(u.l)}</td></tr>`).join('')||'<tr><td colspan="3" class="muted">Rien de prévu</td></tr>'}</tbody></table></div>
+    <div class="pl-tip" id="pl-tip"></div>`;
+  $('#s-planning').querySelectorAll('[data-z]').forEach(b=>b.onclick=()=>{plState.zoom=b.dataset.z;$('#s-planning').querySelectorAll('[data-z]').forEach(x=>x.classList.toggle('on',x===b));renderPlanning();});
+  $('#pl-av').onclick=e=>{plState.avenir=!plState.avenir;e.target.classList.toggle('on',plState.avenir);renderPlanning();};
+  $('#pl-all').onclick=()=>{const ids=[...new Set(P.lignes.map(r=>r.lot))]; if(plState.fermes.size) plState.fermes.clear(); else ids.forEach(i=>plState.fermes.add(i)); renderPlanning();};
+  const tip=$('#pl-tip');
+  $('#s-planning').addEventListener('mousemove',e=>{const t=e.target.closest('[data-tip]'); if(!t){tip.style.display='none';return;} tip.innerHTML=t.dataset.tip; tip.style.display='block'; tip.style.left=(e.clientX+14)+'px'; tip.style.top=(e.clientY+14)+'px';});
+  window._rp=renderPlanning; renderPlanning();
+
+  /* ---------- Lots ---------- */
+  $('#s-lots').innerHTML = `<h2>Lots et tâches</h2>` + D.lots.map(l=>`
+    <div class="card" id="lot-${l.id}" style="margin-bottom:16px">
+      <div class="lot-h"><span class="sw" style="background:${l.couleur}"></span><div style="flex:1"><h3 style="margin:0">Lot ${l.id} – ${esc(l.titre)}</h3><div class="small muted">${esc(l.acteurs)}</div></div>${pill(l.statut)}</div>
+      <div class="grid g2">
+        <div><table>${l.taches.map(t=>`<tr><td style="width:46px"><b>${esc(t.id)}</b></td><td>${esc(t.titre)}<div class="bar" style="margin-top:4px"><i style="width:${t.avancement}%;background:${l.couleur}"></i></div></td><td style="width:40px" class="small muted">${t.avancement}%</td></tr>`).join('')}</table></div>
+        <div><b class="small">Livrables</b><ul>${l.livrables.map(x=>`<li>${esc(x)}</li>`).join('')}</ul><div class="small">${flink(l.dossier,'📁 Ouvrir le dossier du lot')}</div></div>
+      </div>
+      <div class="pts">${l.points.slice().sort((a,b)=>b.date.localeCompare(a.date)).map(p=>`<div><b>${fdate(p.date)}</b>${esc(p.texte)}</div>`).join('')}</div>
+    </div>`).join('');
+
+  /* ---------- Comptes rendus ---------- */
+  const types=[...new Set(D.comptesRendus.map(c=>c.type))];
+  let fType=null, fTxt='';
+  $('#s-cr').innerHTML = `<h2>Comptes rendus</h2>
+    <div class="filters"><input id="q" placeholder="Rechercher (participant, sujet, mot-clé…)"><button class="chip on" data-t="">Tous</button>${types.map(t=>`<button class="chip" data-t="${esc(t)}">${esc(t)}</button>`).join('')}</div>
+    <div class="card" id="crlist"></div>`;
+  function renderCR(){
+    const L=D.comptesRendus.slice().sort((a,b)=>b.date.localeCompare(a.date)).filter(c=>(!fType||c.type===fType)&&(!fTxt||JSON.stringify(c).toLowerCase().includes(fTxt)));
+    $('#crlist').innerHTML = L.length? L.map(c=>`<div class="cr"><div><div class="d">${fdate(c.date)}</div><span class="pill">${esc(c.type)}</span></div>
+      <div><div class="t">${esc(c.titre)}</div>${c.participants?`<div class="small muted">${esc(c.participants)}</div>`:''}
+      ${c.synthese?`<ul>${c.synthese.map(s=>`<li>${esc(s)}</li>`).join('')}</ul>`:''}
+      ${c.decisions?`<div class="small"><b>Décisions :</b><ul>${c.decisions.map(s=>`<li>${esc(s)}</li>`).join('')}</ul></div>`:''}
+      ${c.actions?`<details><summary>${c.actions.length} action(s)</summary><ul>${c.actions.map(s=>`<li>${esc(s)}</li>`).join('')}</ul></details>`:''}
+      <div class="small" style="margin-top:4px">${flink(c.fichier)}</div></div></div>`).join('') : '<p class="muted">Aucun compte rendu.</p>';
+  }
+  $('#s-cr').querySelector('.filters').onclick=e=>{ if(e.target.dataset.t===undefined) return; fType=e.target.dataset.t||null;
+    $('#s-cr').querySelectorAll('.chip').forEach(b=>b.classList.toggle('on',b===e.target)); renderCR(); };
+  $('#q').oninput=e=>{fTxt=e.target.value.toLowerCase();renderCR();};
+  renderCR();
+
+  /* ---------- Actions ---------- */
+  const ord={'a-faire':0,'en-cours':1,'fait':2};
+  $('#s-actions').innerHTML = `<h2>Actions</h2><div class="card"><table><thead><tr><th>Qui</th><th>Quoi</th><th>Issue de</th><th>Échéance</th><th>Statut</th></tr></thead><tbody>
+    ${D.actions.slice().sort((a,b)=>ord[a.statut]-ord[b.statut]).map(a=>`<tr><td><b>${esc(a.qui)}</b></td><td>${esc(a.quoi)}</td><td class="small">${/^\d{4}-/.test(a.source)?'CR du '+fdate(a.source):esc(a.source)}</td><td class="small">${fdate(a.echeance)}</td><td>${pill(a.statut)}</td></tr>`).join('')}
+    </tbody></table></div>`;
+
+  /* ---------- Équipe ---------- */
+  $('#s-equipe').innerHTML = `<h2>Équipe projet</h2><div class="card"><table><thead><tr><th>Structure</th><th>Rôle</th><th>Interlocuteurs</th></tr></thead><tbody>
+    ${D.partenaires.map(p=>`<tr><td><b>${esc(p.structure)}</b></td><td>${esc(p.role)}</td><td>${esc(p.contacts)}</td></tr>`).join('')}</tbody></table></div>
+    <div class="card" style="margin-top:16px"><h3>Comité technique restreint</h3><div>${esc(D.comiteRestreint)}</div></div>`;
+
+  /* ---------- Notes & photos ---------- */
+  $('#s-notes').innerHTML = `<h2>Notes</h2>
+    ${D.notes.map(n=>`<div class="card" style="margin-bottom:10px"><b>${fdate(n.date)}</b> · <b>${esc(n.titre)}</b><div style="white-space:pre-wrap;margin-top:4px">${esc(n.texte)}</div>${n.photo?`<img src="${esc(n.photo)}" style="max-width:420px;margin-top:8px;border-radius:8px">`:''}</div>`).join('')}
+    <h2 style="margin-top:22px">Photos</h2>
+    <div class="photos">${D.photos.map(p=>`<figure><img src="${esc(p.fichier)}" alt="${esc(p.legende)}" loading="lazy" data-full="${esc(p.fichier)}"><figcaption>${esc(p.legende)}${p.original&&href(p.original)?` · <a href="${href(p.original)}" target="_blank" rel="noopener">original</a>`:''}</figcaption></figure>`).join('')}</div>`;
+  $('#s-notes').querySelectorAll('img[data-full]').forEach(i=>i.onclick=()=>{const lb=$('#lb');lb.querySelector('img').src=i.dataset.full;lb.style.display='flex';});
+
+  /* ---------- Livrables ADEME ---------- */
+  const LV=D.livrables||[], ECs=D.attendusEC||[];
+  const STL={remis:'Remis / réalisé','en-cours':'En cours',retard:'En retard','a-venir':'À venir'};
+  const pillL = s => `<span class="pill st-${s}">${STL[s]||s}</span>`;
+  const cnt = k => LV.filter(l=>l.statut===k).length;
+  let fEC='';
+  function renderLiv(){
+    const L=LV.filter(l=>!fEC||l.ec.replace(/\s/g,'').includes(fEC));
+    $('#lv-tab').innerHTML=L.map(l=>`<tr><td><b>${esc(l.ref)}</b><div class="small muted">${esc(l.tache)}</div></td><td>${esc(l.titre)}${l.ademe?' <span class="pill" title="À envoyer à l\'ADEME">ADEME</span>':''}<div class="small muted">${esc(l.note||'')}</div></td><td class="small">${esc(l.ec)}<div class="muted">${esc(l.echeance)}</div></td><td>${pillL(l.statut)}</td><td class="small">${l.fichier?flink(l.fichier,'ouvrir'):'<span class="muted">—</span>'}</td></tr>`).join('');
+  }
+  $('#s-livrables').innerHTML = `<h2>Livrables ADEME (annexe A)</h2>
+    <div class="grid g4" style="margin-bottom:16px">
+      <div class="card kpi"><div class="l">Remis / réalisés</div><div class="v" style="color:var(--vert)">${cnt('remis')}</div></div>
+      <div class="card kpi"><div class="l">En cours</div><div class="v" style="color:var(--bleu)">${cnt('en-cours')}</div></div>
+      <div class="card kpi"><div class="l">En retard</div><div class="v" style="color:var(--rouge)">${cnt('retard')}</div></div>
+      <div class="card kpi"><div class="l">À venir</div><div class="v">${cnt('a-venir')}</div></div>
+    </div>
+    <h3>Attendus par étape-clé</h3>
+    <div class="grid g4" style="margin-bottom:18px">${ECs.map(e=>`<div class="card"><div style="display:flex;justify-content:space-between;gap:6px;align-items:start"><b>${esc(e.ec)}</b>${pillL(e.statut)}</div><div class="small" style="margin-top:6px">${esc(e.items)}</div></div>`).join('')}</div>
+    <div class="filters"><button class="chip on" data-ec="">Tous</button>${['EC1','EC2','EC3'].map(e=>`<button class="chip" data-ec="${e}">${e}</button>`).join('')}</div>
+    <div class="card"><table><thead><tr><th style="width:70px">Réf.</th><th>Livrable</th><th style="width:120px">Étape-clé</th><th style="width:130px">Statut</th><th style="width:70px">Fichier</th></tr></thead><tbody id="lv-tab"></tbody></table>
+    <div class="small muted" style="margin-top:8px">Statuts établis d'après le dossier EC1 (11-DIFFUSION) et les CR – à valider. « ADEME » = livrable à envoyer à l'ADEME (colonne X de l'annexe A).</div></div>`;
+  $('#s-livrables').querySelector('.filters').onclick=e=>{if(e.target.dataset.ec===undefined)return; fEC=e.target.dataset.ec; $('#s-livrables').querySelectorAll('.chip').forEach(b=>b.classList.toggle('on',b===e.target)); renderLiv();};
+  renderLiv();
+
+  /* ---------- Budget ---------- */
+  const B=D.budget;
+  const eur = n => (n==null?'':Math.round(n).toLocaleString('fr-FR')+' €');
+  const eur0 = n => n?eur(n):'<span class="muted">–</span>';
+  if(B){
+    const hasTot=B.coutsParLot.some(l=>l.total!=null);
+    const totAide=B.partenaires.reduce((a,p)=>a+p.aide,0), totEc1=B.partenaires.reduce((a,p)=>a+p.ec1,0);
+    const C=B.cenc, sumCol=i=>C.postes.reduce((a,p)=>a+p.v[i],0);
+    const consomme=sumCol(0)+sumCol(1)+sumCol(4), engage=sumCol(2)+sumCol(3), prevu=sumCol(5), reserve=C.reserve.reduce((a,r)=>a+r.m,0);
+    const totalPrev=consomme+engage+prevu+reserve, ecart=totalPrev-C.enveloppeSuivi;
+    const W=x=>Math.max(0,x/Math.max(totalPrev,C.enveloppeSuivi)*100);
+    const T=B.tresorerie2026, mn=Math.min(...T.soldeCumule), h=140, bw=40;
+    const svg=`<svg viewBox="0 0 ${T.mois.length*bw+40} ${h+40}" style="width:100%;max-width:640px">
+      <line x1="30" y1="10" x2="${T.mois.length*bw+30}" y2="10" stroke="#999"/>
+      ${T.soldeCumule.map((v,i)=>{const hh=v/mn*h||0;return `<rect x="${34+i*bw}" y="10" width="${bw-8}" height="${hh}" fill="${v<=mn*0.7?'#b3261e':'#e08a3c'}" rx="3"><title>${T.mois[i]} 2026 : ${eur(v)}</title></rect><text x="${34+i*bw+(bw-8)/2}" y="${h+30}" font-size="10" text-anchor="middle" fill="#666">${T.mois[i]}</text>${v?`<text x="${34+i*bw+(bw-8)/2}" y="${14+hh+10}" font-size="8" text-anchor="middle" fill="#333">${Math.round(v/1000)}k</text>`:''}`}).join('')}
+      <text x="0" y="14" font-size="9" fill="#666">0 €</text></svg>`;
+    $('#s-budget').innerHTML = `<h2>Budget et financement</h2>
+      <div class="grid g4" style="margin-bottom:16px">
+        <div class="card kpi"><div class="l">${B.partenaires.length>1?`Aide ADEME totale (${B.partenaires.length} partenaires)`:`Aide ADEME – ${esc(B.partenaires[0].nom)}`}</div><div class="v">${eur(totAide)}</div><div class="muted small">avance ${B.tauxAvance} % = ${eur(totAide*B.tauxAvance/100)}</div></div>
+        <div class="card kpi"><div class="l">Dépenses justifiées à l'EC1</div><div class="v">${eur(totEc1)}</div><div class="muted small">${Math.round(totEc1/totAide*100)} % de l'aide</div></div>
+        <div class="card kpi"><div class="l">CenC – prévisionnel total</div><div class="v">${eur(totalPrev)}</div><div class="muted small">enveloppe de suivi ${eur(C.enveloppeSuivi)}</div></div>
+        <div class="card kpi"><div class="l">CenC – écart</div><div class="v" style="color:${ecart>0?'var(--rouge)':'var(--vert)'}">${ecart>0?'+':''}${eur(ecart)}</div><div class="muted small">${ecart>0?'dépassement à arbitrer':'marge disponible'}</div></div>
+      </div>
+      <div class="grid g2">
+        <div class="card"><h3>${B.partenaires.length>1?'Aide et dépenses justifiées par partenaire':'Aide et dépenses justifiées'}</h3>
+          <table><thead><tr><th>Partenaire</th><th class="num">Aide max.</th><th class="num">Justifié EC1</th><th style="width:28%">Consommation</th></tr></thead><tbody>
+          ${B.partenaires.map(p=>`<tr><td><b>${esc(p.nom)}</b><div class="small muted">${esc(p.convention)} · ${esc(p.periodeEc1)}</div></td><td class="num">${eur(p.aide)}</td><td class="num">${eur(p.ec1)}</td><td><div class="gauge"><i style="width:${p.ec1/p.aide*100}%;background:var(--accent)"></i></div><div class="small muted">${Math.round(p.ec1/p.aide*100)} %</div></td></tr>`).join('')}
+          ${B.partenaires.length>1?`<tr class="tot"><td>Total</td><td class="num">${eur(totAide)}</td><td class="num">${eur(totEc1)}</td><td class="small">${Math.round(totEc1/totAide*100)} %</td></tr>`:''}</tbody></table>
+          <div class="small muted" style="margin-top:6px">${esc(B.noteParten)}</div>
+          <h3 style="margin-top:14px">Plafonds de versement (annexe B)</h3>
+          <div class="small">Avance ${B.tauxAvance} % à la signature, puis versements sur ERD dans la limite de : ${B.plafondsVersements.map(v=>`<b>${v.ec}</b> ${v.cumul} %`).join(' · ')} (cumul, avance incluse).</div>
+          ${B.versementsRecus&&B.versementsRecus.length?'':'<div class="small muted" style="margin-top:4px">Versements ADEME reçus : à renseigner (aucune pièce trouvée dans le dossier).</div>'}
+        </div>
+        <div class="card"><h3>${hasTot?'Coûts par lot':'Budget Construire en Chanvre par lot'}</h3>
+          <table><thead><tr><th>Lot</th>${hasTot?'<th class="num">Tous partenaires</th><th class="num">dont CenC</th>':'<th class="num">CenC</th>'}</tr></thead><tbody>
+          ${B.coutsParLot.map(l=>{const L=D.lots.find(x=>x.id===l.lot)||{};return `<tr><td><span class="lg" style="margin-left:0;background:${L.couleur||'#888'}"></span>Lot ${l.lot} – ${esc(L.titre||'')}</td>${hasTot?`<td class="num">${eur(l.total)}</td>`:''}<td class="num">${eur(l.cenc)}</td></tr>`}).join('')}
+          <tr class="tot"><td>Total</td>${hasTot?`<td class="num">${eur(B.coutsParLot.reduce((a,l)=>a+l.total,0))}</td>`:''}<td class="num">${eur(B.coutsParLot.reduce((a,l)=>a+l.cenc,0))}</td></tr></tbody></table>
+          <div class="small muted" style="margin-top:6px">${esc(B.noteLots)}</div>
+        </div>
+      </div>
+      <div class="card" style="margin-top:16px"><h3>Construire en Chanvre – suivi des prestataires (point 09/2026)</h3>
+        <div class="gauge" style="height:22px;margin:10px 0 6px"><i style="width:${W(consomme)}%;background:var(--accent-2)" title="Réglé / facturé"></i><i style="width:${W(engage)}%;background:var(--accent)" title="Engagé"></i><i style="width:${W(prevu)}%;background:#c9d8a8" title="Prévu 2027"></i><i style="width:${W(reserve)}%;background:#e7d3b8" title="Réserve"></i></div>
+        <div class="small" style="margin-bottom:10px"><span class="lg" style="margin-left:0;background:var(--accent-2)"></span>réglé / facturé ${eur(consomme)}<span class="lg" style="background:var(--accent)"></span>engagé ${eur(engage)}<span class="lg" style="background:#c9d8a8"></span>prévu 2027 ${eur(prevu)}<span class="lg" style="background:#e7d3b8"></span>reste à attribuer ${eur(reserve)} · <b>enveloppe ${eur(C.enveloppeSuivi)}</b></div>
+        <table><thead><tr><th>Poste</th>${C.colonnes.map(c=>`<th class="num">${c}</th>`).join('')}<th class="num">Total</th></tr></thead><tbody>
+        ${C.postes.map(p=>`<tr><td>${esc(p.nom)}</td>${p.v.map(x=>`<td class="num">${eur0(x)}</td>`).join('')}<td class="num"><b>${eur(p.v.reduce((a,b)=>a+b,0))}</b></td></tr>`).join('')}
+        <tr class="tot"><td>Total</td>${C.colonnes.map((c,i)=>`<td class="num">${eur(sumCol(i))}</td>`).join('')}<td class="num">${eur(consomme+engage+prevu)}</td></tr></tbody></table>
+        <details style="margin-top:10px"><summary>Reste à attribuer : ${eur(reserve)}</summary><ul>${C.reserve.map(r=>`<li>${esc(r.nom)} : ${eur(r.m)}</li>`).join('')}</ul></details>
+        <div class="small" style="margin-top:6px">Source : ${flink(C.source,'point reste à régler 09/2026')}</div>
+      </div>
+      <div class="card" style="margin-top:16px"><h3>Trésorerie CenC 2026 – solde cumulé estimé</h3>${svg}<div class="small muted">${esc(T.note)} Source : ${flink(T.source,'plan de trésorerie')}</div></div>`;
+  }
+
+  /* ---------- Export PDF ---------- */
+  function ouvrirExport(){
+    const def={bord:1,planning:1,lots:1,livrables:1,budget:1,cr:1,actions:1,equipe:0,notes:0,docs:0};
+    $('#exp-list').innerHTML=tabs.map(([k,l])=>`<label><input type="checkbox" value="${k}" ${def[k]?'checked':''}> ${l}</label>`).join('');
+    $('#exp').style.display='flex';
+  }
+  $('#exp-annul').onclick=()=>$('#exp').style.display='none';
+  $('#exp-ok').onclick=()=>{
+    const sel=[...$('#exp-list').querySelectorAll('input:checked')].map(i=>i.value);
+    $('#exp').style.display='none';
+    document.querySelectorAll('main section').forEach(s=>{s.classList.toggle('imp',sel.includes(s.id.slice(2)));});
+    $('#foot-date').textContent='Édité le '+today.toLocaleDateString('fr-FR');
+    const z=plState.zoom; plState.zoom='fit'; plState.printW=1030; renderPlanning();
+    document.querySelectorAll('#s-cr details').forEach(d=>d.open=true);
+    const titre=document.title; document.title='NECCITE – Tableau de pilotage – '+today.toISOString().slice(0,10);
+    setTimeout(()=>{window.print(); document.title=titre; plState.zoom=z; plState.printW=0; renderPlanning();},150);
+  };
+
+  /* ---------- Documents ---------- */
+  const groupes=[...new Set(D.documents.map(d=>d.groupe))];
+  $('#s-docs').innerHTML = `<h2>Documents clés</h2><div class="grid g2">${groupes.map(g=>`<div class="card"><h3>${esc(g)}</h3>${D.documents.filter(d=>d.groupe===g).map(d=>`<div style="margin:5px 0">${d.url?`<a class="file" href="${esc(d.url)}" target="_blank">${esc(d.titre)}</a>`:flink(d.fichier,d.titre)}</div>`).join('')}</div>`).join('')}</div>
+    <div class="card help" style="margin-top:20px"><h3>Mettre à jour ce tableau</h3>
+      <div>${EN_LIGNE?'Version en ligne partagée avec le comité technique et les partenaires, mise à jour chaque vendredi. Les liens ouvrent les documents dans le Drive partagé du projet (accès nécessaire). ':''}Toutes les données sont dans <code>donnees.js</code> (même dossier). Le plus simple : déposer le nouveau CR dans <code>01-CR PILOTAGE</code> et demander à Claude, dans le projet NECCITE, de mettre à jour le tableau. Les notes manuscrites et les photos peuvent aussi lui être envoyées directement.</div>
+      <h3 style="margin-top:12px">Journal des mises à jour</h3><ul>${D.journal.map(j=>`<li><b>${fdate(j.date)}</b> – ${esc(j.texte)}</li>`).join('')}</ul></div>`;
+
+  show((location.hash||'#bord').slice(1) in Object.fromEntries(tabs) ? (location.hash||'#bord').slice(1) : 'bord');
+})();
+</script>
+</body>
+</html>
