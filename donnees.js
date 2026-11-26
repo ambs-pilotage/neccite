@@ -1,6 +1,6 @@
 /* VERSION PARTAGÉE – générée automatiquement par outils/version_partagee.js, ne pas modifier */
 window.NECCITE = {
- "miseAJour": "2026-11-20",
+ "miseAJour": "2026-11-26",
  "projet": {
   "acronyme": "NÉ-C-C'-ITE",
   "titre": "Nouvelles Expertises de la Construction Chanvre pour l'Isolation Thermique par l'Extérieur",
@@ -26,6 +26,12 @@ window.NECCITE = {
  "alertes": [
   {
    "niveau": "rouge",
+   "titre": "Essais d'arrachement CERIB : adhérence béton de chanvre / support non mesurable",
+   "texte": "Rapport CERIB 065036-A (24/11/2026) : 31 corps d'épreuve testés, 31 ruptures à l'interface gobetis / support (cas A), aucune dans le béton de chanvre. Une seule valeur (brique 80 mm) : 0,03 MPa, hors plage d'étalonnage ; toutes les autres sous le seuil de détection (≈ 0,06 MPa sur 20 × 20 cm), contre 0,3 MPa attendus. À relier au cadrage mécanique (fixations) : la tenue d'une ITE collée sur gobetis ne peut pas reposer sur l'adhérence seule.",
+   "source": "Rapport CERIB 065036-A · mail T. Mohar 24/11/2026"
+  },
+  {
+   "niveau": "rouge",
    "titre": "Orientation du programme H77 / GTM – arbitrage ADEME demandé",
    "texte": "Suite à la proposition H77/GTM du 10/11 (lots repris autour de l'ATEx REHASKEEN, guide CSTB « basé sur l'ATEx cas b »), CenC demande une réunion avec l'ADEME : financement d'études alimentant une ATEx privée, droits d'usage des résultats, guide couvrant les 3 familles, gouvernance des missions CSTB. En attendant : poursuite des travaux génériques validés, report des réorientations contestées.",
    "source": "Note CenC du 20/11/2026"
@@ -38,8 +44,8 @@ window.NECCITE = {
   },
   {
    "niveau": "rouge",
-   "titre": "Budget CenC : prévisionnel supérieur à l'enveloppe d'environ 57 k€",
-   "texte": "Le point de septembre 2026 totalise 550 140 € (engagé + prévu 2027 + reste à attribuer) pour une enveloppe de suivi de 492 853 €. Le poste principal est l'essai feu CERIB (132 840 € prévus en 2027). Arbitrages à prévoir : réaffectation de l'essai AEV, essais sismiques, réserve.",
+   "titre": "Budget CenC : prévisionnel supérieur à l'enveloppe d'environ 53 k€",
+   "texte": "Le point de septembre 2026 totalise 550 140 € (engagé + prévu 2027 + reste à attribuer) pour une enveloppe de suivi de 492 853 € ; ramené à ≈ 545 400 € après la facturation au prorata des essais d'arrachement CERIB (-4 738,50 € TTC, 11/2026). Le poste principal est l'essai feu CERIB (132 840 € prévus en 2027). Arbitrages à prévoir : réaffectation de l'essai AEV, essais sismiques, réserve.",
    "source": "Point NECCITE reste à régler 09/2026"
   },
   {
@@ -471,7 +477,7 @@ window.NECCITE = {
    "id": "2",
    "titre": "Comportement mécanique des systèmes",
    "couleur": "#275317",
-   "statut": "ok",
+   "statut": "vigilance",
    "acteurs": "LMing (L. Mouly) · CenC · CERIB",
    "dossier": "03-TRAVAIL NECCITE/01-FICHIERS SUIVI DES ETAPES CLEFS/LOT 02 - COMPORTEMENT MECANIQUE DES SYSTEMES",
    "taches": [
@@ -493,7 +499,7 @@ window.NECCITE = {
     {
      "id": "+",
      "titre": "Essais d'arrachement sur gobetis (CERIB) – brique, parpaing, pierre, BA",
-     "avancement": 30
+     "avancement": 90
     },
     {
      "id": "+",
@@ -506,6 +512,14 @@ window.NECCITE = {
    ],
    "points": [
     {
+     "date": "2026-11-26",
+     "texte": "Réponse CenC au CERIB : adhérence très inférieure aux systèmes collés conventionnels ; questions sur l'adéquation du dispositif d'essai et sur les retours d'expérience d'autres ITE collées."
+    },
+    {
+     "date": "2026-11-24",
+     "texte": "Rapport CERIB 065036-A : aucun résultat exploitable. 31 corps d'épreuve sur 40 livrés (pierre 3 + 3, béton lissé 200 mm absent) ; ruptures systématiques à l'interface support / gobetis malgré une surface d'essai portée à 20 × 20 cm ; une seule valeur (0,03 MPa, brique 80 mm, hors étalonnage). Facturation au prorata 31/40."
+    },
+    {
      "date": "2026-10-15",
      "texte": "Corps d'épreuve (pierre, brique, parpaing, BA) déposés au CERIB par C. Lubert pour les essais d'arrachement ; le support le plus défavorable servira aux essais feu."
     },
@@ -515,7 +529,7 @@ window.NECCITE = {
     },
     {
      "date": "2026-05-27",
-     "texte": "Rendu LMing de mai 2026 déposé (dossier RENDU LMing-2605)."
+     "texte": "Rendu LMing de mai 2026 déposé (dossier RENDU-LMing-2605)."
     }
    ]
   },
@@ -666,6 +680,26 @@ window.NECCITE = {
   }
  ],
  "comptesRendus": [
+  {
+   "date": "2026-11-24",
+   "type": "Rapport d'essai",
+   "titre": "CERIB – essais d'arrachement sur gobetis (rapport 065036-A)",
+   "participants": "CERIB (T. Mohar, B. Laval) · CenC (Q. Pichon)",
+   "fichier": "03-TRAVAIL NECCITE/01-FICHIERS SUIVI DES ETAPES CLEFS/LOT 02 - COMPORTEMENT MECANIQUE DES SYSTEMES/RENDU - CERIB arrachement-2611/2026-11-24_RE_065036-A.pdf",
+   "synthese": [
+    "Essais inspirés de la NF EN 1015-12 : 4 supports (bloc béton, brique, pierre, béton lissé) × 2 épaisseurs (80 et 200 mm), plaques collées de 20 × 20 cm ; coulage le 19/12/2025, essais en semaine 46 (328 jours de séchage).",
+    "31 corps d'épreuve reçus sur 40 (pierre : 3 + 3 ; béton lissé 200 mm : 0). Conservation hors §7.4 de la norme ; découpe à la disqueuse réalisée côté CenC avant envoi.",
+    "Toutes les ruptures à l'interface béton de chanvre / support (cas A). Efforts non détectables sauf un essai sur brique 80 mm : 1,40 kN, soit 0,03 MPa, sous la première valeur étalonnée du capteur (2,5 kN). Pas de moyenne possible.",
+    "Réponse CenC (26/11) : adhérence très faible au regard des systèmes collés conventionnels, alors que le REX montre des ITE collées sur gobetis ; questions au CERIB sur l'adéquation du dispositif (capteur 25 kN, vitesse 0,44 kN/s) et sur leurs retours d'expérience."
+   ],
+   "decisions": [
+    "Facturation CERIB au prorata 31/40 essais : 13 601,25 € au lieu de 17 550 € (devis CER-DEV25002912)."
+   ],
+   "actions": [
+    "CERIB : répondre aux questions de CenC (dispositif d'essai, comparaison avec d'autres ITE collées)",
+    "CenC : décider d'une éventuelle série complémentaire et relier le résultat au cadrage des fixations avec LMing"
+   ]
+  },
   {
    "date": "2026-10-23",
    "type": "Partenaires H77",
@@ -1074,6 +1108,34 @@ window.NECCITE = {
   }
  ],
  "actions": [
+  {
+   "qui": "CERIB (T. Mohar)",
+   "quoi": "Répondre aux questions de CenC : adéquation du dispositif d'essai (capteur 25 kN, vitesse) au béton de chanvre, retours d'expérience sur d'autres ITE collées",
+   "source": "2026-11-26",
+   "echeance": "",
+   "statut": "en-cours"
+  },
+  {
+   "qui": "CenC (Q. Pichon)",
+   "quoi": "Décider d'une éventuelle série d'arrachement complémentaire (capteur 2,5–5 kN, vitesse réduite) et en évaluer le coût",
+   "source": "2026-11-24",
+   "echeance": "",
+   "statut": "a-faire"
+  },
+  {
+   "qui": "CenC / LMing (L. Mouly)",
+   "quoi": "Intégrer le résultat d'arrachement (adhérence < 0,06 MPa) au cadrage mécanique : rôle des fixations mécaniques pour les systèmes sur gobetis",
+   "source": "2026-11-24",
+   "echeance": "Avant EC2",
+   "statut": "a-faire"
+  },
+  {
+   "qui": "CenC / LB Eco Habitat (C. Lubert)",
+   "quoi": "Expliquer les 9 corps d'épreuve non livrés (pierre, béton lissé 200 mm) et documenter la mise en œuvre du gobetis",
+   "source": "2026-11-24",
+   "echeance": "",
+   "statut": "a-faire"
+  },
   {
    "qui": "CenC (Q. Pichon)",
    "quoi": "Obtenir la réunion d'arbitrage avec l'ADEME (financement ATEx privée, droits, guide 3 familles, gouvernance CSTB)",
@@ -1533,12 +1595,12 @@ window.NECCITE = {
      ]
     },
     {
-     "nom": "CERIB – essais arrachement (lot 2)",
+     "nom": "CERIB – essais arrachement (lot 2) – facturé 31/40 essais",
      "v": [
       0,
       0,
       10530,
-      10530,
+      5791.5,
       0,
       0
      ]
@@ -1779,7 +1841,7 @@ window.NECCITE = {
    "echeance": "T0+18",
    "statut": "en-cours",
    "ademe": false,
-   "fichier": "03-TRAVAIL NECCITE/01-FICHIERS SUIVI DES ETAPES CLEFS/LOT 02 - COMPORTEMENT MECANIQUE DES SYSTEMES/RENDU LMing-2605/NECCITE_LMING_260506_ETUDE MECANIQUE.pdf",
+   "fichier": "03-TRAVAIL NECCITE/01-FICHIERS SUIVI DES ETAPES CLEFS/LOT 02 - COMPORTEMENT MECANIQUE DES SYSTEMES/RENDU-LMing-2605/NECCITE_LMING_260506_ETUDE MECANIQUE.pdf",
    "note": "Étude mécanique LMing 05/2026 ; modèle BIM non trouvé dans le dossier."
   },
   {
@@ -1790,8 +1852,8 @@ window.NECCITE = {
    "echeance": "T0+18",
    "statut": "en-cours",
    "ademe": false,
-   "fichier": "03-TRAVAIL NECCITE/01-FICHIERS SUIVI DES ETAPES CLEFS/LOT 02 - COMPORTEMENT MECANIQUE DES SYSTEMES/RENDU LMing-2605/NECCITE_LMING_260226_HYPOTHSES STR.pdf",
-   "note": "Hypothèses structurelles 02/2026 ; essais d'arrachement CERIB en cours."
+   "fichier": "03-TRAVAIL NECCITE/01-FICHIERS SUIVI DES ETAPES CLEFS/LOT 02 - COMPORTEMENT MECANIQUE DES SYSTEMES/RENDU-LMing-2605/NECCITE_LMING_260226_HYPOTHSES STR.pdf",
+   "note": "Hypothèses structurelles 02/2026 ; essais d'arrachement CERIB terminés le 24/11/2026 sans valeur exploitable (rapport 065036-A)."
   },
   {
    "ref": "L2.3",
@@ -1939,7 +2001,7 @@ window.NECCITE = {
  ],
  "journal": [
   {
-   "date": "2026-11-20",
+   "date": "2026-11-26",
    "texte": "Version partagée avec le comité technique et les partenaires (sans données financières des autres partenaires ni documents confidentiels)."
   }
  ]
